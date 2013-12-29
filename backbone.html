@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+	<title>Ractive + Backbone | Examples | Ractive.js</title>
+
+	
+	
+	<link rel="stylesheet" href="examples.css">
+
+	
+
+	<style id="example-css" type="text/css">.info {
+	position: relative;
+	width: 50%;
+	float: left;
+	line-height: 1.5;
+	margin: 0 0 2em 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.info img {
+	float: left;
+	height: 15em;
+	margin: 0 1em 1em 0;
+	border: 1px solid #eee;
+}
+
+.info h3, .info h4 {
+	font-family: Voltaire;
+	font-weight: normal;
+	margin: 0;
+	line-height: 1.5;
+}
+
+.info h3 {
+	font-size: 2em;
+}
+
+.info h4 {
+	margin: 0 0 1em 0;
+}
+
+.info p {
+	font-size: 0.8em;
+}
+
+
+ul {
+	width: 50%;
+	float: left;
+	list-style: none;
+	padding: 0 0 0 1em;
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+li {
+	position: relative;
+	float: left;
+	width: 16.666%;
+	padding: 0.1em 0.3em;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.thumbnail img {
+	width: 100%;
+	opacity: 0.2;
+	-webkit-transition: opacity 0.2s;
+	-moz-transition: opacity 0.2s;
+	transition: opacity 0.2s;
+}
+
+.highlighted img, .thumbnail:hover img {
+	opacity: 1;
+	box-shadow: 0 0 3px 1px rgba(114,157,52,1);
+}
+
+.credits {
+	position: relative;
+	margin: 0 0 0.5em 0;
+}
+
+/* clearfix */
+.credits:before, .credits:after {
+	content: ' ';
+	display: table;
+}
+
+.credits:after {
+	clear: both;
+}
+/* end clearfix */
+
+.source {
+	clear: both;
+}
+
+.actor, .director {
+	position: relative;
+	width: 50%;
+	float: left;
+	display: block;
+	padding: 0.8em 0.5em 0.5em 0.5em;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	line-height: 1;
+}
+
+.actor span, .director span {
+	font-size: 1.2em;
+	color: #729d34;
+	font-family: Voltaire;
+	padding: 0 0 0 1.5em;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	line-height: 1;
+}
+
+.actor:hover, .director:hover {
+	background-color: #f4f4f4;
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+}
+
+.actor span {
+	background: url(assets/bond/icons/bond.svg) no-repeat 0 0.1em;
+	background-size: 1em 1em;
+}
+
+.director span {
+	background: url(assets/bond/icons/clapboard.svg) no-repeat 0 0.1em;
+	background-size: 1em 1em;
+}
+
+.credits-list {
+	position: absolute;
+	top: 2.5em;
+	width: 140%;
+	background-color: #f4f4f4;
+	padding: 1em;
+	color: #353535;
+	font-family: 'Baskerville', 'Book Antiqua', 'Georgia';
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+}
+
+.actor .credits-list {
+	line-height: 1.5;
+	left: 0;
+}
+
+.director .credits-list {
+	line-height: 1.5;
+	right: 0;
+}</style></head>
+
+<body class="example"><header><h1>Ractive + Backbone</h1>
+		<a class="more-examples" href="./">more Ractive.js examples &raquo;</a></header>
+
+	<div class="example-container"><div id="example"><noscript><p class=message>Please <a href=www.enable-javascript.com>enable JavaScript</a> to view this example.</p></noscript></div></div>
+
+	<div id="info"></div>
+
+
+	<script id="infoTemplate" type="ractive"><div class='controls'>
+			<span on-tap='select:readme'     class='tab <% selected === "readme"     ? "selected" : "" %>'>readme</span>
+			<span on-tap='select:template'   class='tab <% selected === "template"   ? "selected" : "" %>'>template</span>
+			<span on-tap='select:javascript' class='tab <% selected === "javascript" ? "selected" : "" %>'>javascript</span>
+			<span on-tap='select:css'        class='tab <% selected === "css"        ? "selected" : "" %>'>css</span>
+		</div>
+
+		<div class='wrapper'>
+			<div id='readme-tab'     class='<% selected === "readme" ? "visible" : "hidden" %>'>
+				<p><span class='logo'>Ractive.js</span> isn't an MVC framework, because MVC isn't the only way to build apps. Rather than dressing up your data with dedicated Model classes, you can use plain old JavaScript objects &ndash; POJOs.</p>
+
+<p>That's handy, but sometimes it's not enough &ndash; maybe you want to use Backbone (for example) Models and Collections in your app, but you still want to use Ractive to render your interface.</p>
+
+<p>In these situations, we use <em>adaptors</em>. Adaptors are small plugins that allow Ractive to communicate seamlessly with third-party model libraries. In the example above, we're using the <a href='https://github.com/RactiveJS/Ractive/blob/master/plugins/adaptors/Backbone.js'>Backbone adaptor</a>. We have a variety of model types (<code>Film</code>, <code>Actor</code> and <code>Director</code>) and a collection type (<code>Films</code>).</p>
+
+<p>As Ractive builds up the view, any time it encounters an instance of a Backbone Model, it does two things. Firstly, it wraps the object so that you can do <code>film.title</code> in your template (rather than <code>film.get( 'title' )</code> or <code>film.attributes.title</code>). Secondly, it adds a handler to the model's <code>change</code> event, so that changes in the model are reflected in the view. This binding works in both directions &ndash; changes in the view will also be reflected in the model, where appropriate.</p>
+
+<p>Later, if the model is no longer in use, the event handler will be removed automatically.</p>
+
+<p>This means we have the best of both worlds &ndash; we have Ractive's simplicity, but with the power of Backbone's helper methods. For example when you roll over the actor or director name in the top left, you see a list of credits constructed using the collection's <code>pluck</code> method:</p>
+
+<pre class='prettyprint language-html'><code>&lt;div class='credits-list'&gt;Credits: {{ credits.pluck( 'title' ).join( ', ' ) }}&lt;/div&gt;</code></pre>
+
+<p>This is possible because each <code>Actor</code> and <code>Director</code> instance has a <code>credits</code> property, which is an instance of the <code>Films</code> collection type.</p>
+
+<p>Notice also that within the <code>highlight</code> event handler, we're using the <code>set</code> event on the Backbone object rather than on Ractive, which is a more object-oriented approach if that's your bag.</p>
+
+<p>You'll find more information about adaptors, including how to create your own, on the <a href='https://github.com/RactiveJS/Ractive/wiki/Ractive.adaptors'>wiki</a>.</p>
+			</div>
+
+			<pre id='template-tab'   class='prettyprint language-html <% selected === "template" ? "visible" : "hidden" %>'></pre>
+			<pre id='javascript-tab' class='prettyprint language-javascript <% selected === "javascript" ? "visible" : "hidden" %>'></pre>
+			<pre id='css-tab'        class='prettyprint language-css <% selected === "css" ? "visible" : "hidden" %>'></pre>
+		</div></script>
+
+	<script id="example-template" type="text/ractive"><div class='info'>
+  {{#selectedFilm}}
+
+    <!-- roll over the actor/director name to reveal credits -->
+    <div class='credits'>
+      {{#actor}}
+        <div class='actor' on-hover='highlight:{{this}}'>
+          <span>{{name}}</span>
+
+          {{#highlighted}}
+            <div class='credits-list'>Credits: {{ credits.pluck( 'title' ).join( ', ' ) }}</div>
+          {{/highlighted}}
+        </div>
+      {{/actor}}
+
+      {{#director}}
+        <div class='director' on-hover='highlight:{{this}}'>
+          <span>{{name}}</span>
+
+          {{#highlighted}}
+            <div class='credits-list'>Credits: {{ credits.pluck( 'title' ).join( ', ' ) }}</div>
+          {{/highlighted}}
+        </div>
+      {{/director}}
+    </div>
+
+    <!-- info about the selected film -->
+    <h3>{{title}} <small>({{year}})</small></h3>
+    <h4>{{tagline}}</h4>
+
+    <img src='assets/bond/images/{{poster}}'>
+    <p>{{synopsis}}</p>
+
+    <!-- thanks, themoviedb.org! -->
+    <p class='source'>Source: <a href='http://www.themoviedb.org/movie/{{source}}'>themoviedb.org</a></p>
+  {{/selectedFilm}}
+</div>
+
+<ul>
+  {{#films}}
+    <li
+      on-tap='select:{{this}}'
+      class='thumbnail {{ this === selectedFilm || actor.highlighted || director.highlighted ? "highlighted" : "" }}'
+    >
+      <img src='assets/bond/images/{{poster}}'>
+    </li>
+  {{/films}}
+</ul></script>
+
+	
+	<script src="lib/Ractive-legacy.js"></script>
+	<script src="lib/Ractive-events-tap.min.js"></script>
+	<script src="lib/highlight.js"></script>
+	<script src="lib/underscore-min.js"></script>
+	<script src="lib/backbone-min.js"></script>
+	<script src="lib/Ractive-adaptors-Backbone.js"></script>
+	<script src="lib/Ractive-events-hover.min.js"></script>
+	<script src="js/example.js"></script>
+
+	<script id="example-javascript">var ractive, Film, Actor, Director, Films, getCollectionFromData, xhr;
+
+// First, we render our view
+ractive = new Ractive({
+  el: example,
+  template: template,
+
+  // This is how we tell Ractive to keep an eye out for Backbone objects
+  adaptors: [ 'Backbone' ]
+});
+
+ractive.on({
+  select: function ( event, film ) {
+    // `film` is a Backbone model
+    this.set( 'selectedFilm', film );
+  },
+  highlight: function ( event, talent ) {
+    // `talent` is a Backbone model (either an Actor or Director)
+    talent.set( 'highlighted', event.hover ); // true on mouseover, false on mouseout
+  }
+});
+
+
+// Next, we create some Backbone.Model subclasses. In this case they're very
+// simple, and we could just use the unextended Backbone.Model, but it's
+// important to note that the adaptor works equally well in either case
+Film = Backbone.Model.extend();
+
+Actor = Backbone.Model.extend({
+  initialize: function () {
+    this.set( 'credits', new Films() );
+  }
+});
+
+Director = Backbone.Model.extend({
+  initialize: function () {
+    this.set( 'credits', new Films() );
+  }
+});
+
+// Create a Backbone.Collection subclass. We'll use this several times.
+Films = Backbone.Collection.extend({
+  model: Film,
+  comparator: function ( film ) {
+    return film.get( 'year' ); // sort chronologically
+  }
+});
+
+
+// We have some JSON data that we're about to load - here's how we turn it
+// into a Backbone collection
+getCollectionFromData = function ( data ) {
+  var films, actors, directors, mapped;
+
+  actors = {};
+  directors = {};
+
+  mapped = data.map( function ( record ) {
+    var film, actor, director;
+
+    if ( !actors[ record.actor ] ) {
+      actors[ record.actor ] = new Actor({ name: record.actor });
+    }
+
+    if ( !directors[ record.director ] ) {
+      directors[ record.director ] = new Director({ name: record.director });
+    }
+
+    // Overwrite the plain-text actor and director properties of the data
+    // with Backbone models representing them
+    record.actor = actors[ record.actor ];
+    record.director = directors[ record.director ];
+
+    film = new Film( record );
+
+    // Add this film to the actor's and director's credits
+    record.actor.get( 'credits' ).add( film );
+    record.director.get( 'credits' ).add( film );
+
+    return film;
+  });
+
+  return new Films( mapped );
+};
+
+
+// Load the data from a JSON file, then process it
+xhr = new XMLHttpRequest();
+xhr.open( 'get', 'assets/bond/data.json' );
+
+xhr.onload = function () {
+  var data = JSON.parse( xhr.responseText ), films = getCollectionFromData( data );
+  ractive.set({
+    films: films,
+    selectedFilm: films.get( 'dr-no' )
+  });
+};
+
+xhr.send();</script>
+
+	<script>initExample();</script></body></html>

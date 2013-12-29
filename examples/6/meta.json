@@ -1,8 +1,0 @@
-{
-	"name": "Infinite scroll",
-	"slug": "infinite-scroll",
-	"libs": [
-		"Ractive-transitions-fade.min.js",
-		"Ractive-transitions-slide.min.js"
-	]
-}

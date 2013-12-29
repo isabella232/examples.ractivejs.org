@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+	<title>Components | Examples | Ractive.js</title>
+
+	
+	
+	<link rel="stylesheet" href="examples.css">
+
+	
+
+	<style id="example-css" type="text/css">.box {
+	position: relative;
+	width: 25%;
+	float: left;
+	margin: 0 0 1em 0;
+}
+
+.box:after {
+	display: block;
+	content: '';
+	padding-bottom: 80%;
+}
+
+svg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	padding: 0 0 2em 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+polygon {
+	stroke: white;
+	stroke-width: 1;
+
+	-webkit-transition: opacity 0.2s;
+	-moz-transition: opacity 0.2s;
+	-ms-transition: opacity 0.2s;
+	-o-transition: opacity 0.2s;
+	transition: opacity 0.2s;
+}
+
+.label {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	text-align: center;
+}</style></head>
+
+<body class="example"><header><h1>Components</h1>
+		<a class="more-examples" href="./">more Ractive.js examples &raquo;</a></header>
+
+	<div class="example-container"><div id="example"><noscript><p class=message>Please <a href=www.enable-javascript.com>enable JavaScript</a> to view this example.</p></noscript></div></div>
+
+	<div id="info"></div>
+
+
+	<script id="infoTemplate" type="ractive"><div class='controls'>
+			<span on-tap='select:readme'     class='tab <% selected === "readme"     ? "selected" : "" %>'>readme</span>
+			<span on-tap='select:template'   class='tab <% selected === "template"   ? "selected" : "" %>'>template</span>
+			<span on-tap='select:javascript' class='tab <% selected === "javascript" ? "selected" : "" %>'>javascript</span>
+			<span on-tap='select:css'        class='tab <% selected === "css"        ? "selected" : "" %>'>css</span>
+		</div>
+
+		<div class='wrapper'>
+			<div id='readme-tab'     class='<% selected === "readme" ? "visible" : "hidden" %>'>
+				<p>Components are a way of encapsulating complex functionality within a <span class='logo'>Ractive.js</span> template. Conceptually, they're not dissimilar to <a href='http://www.webcomponentsshift.com'>Web Components</a>, <a href='http://emberjs.com/api/classes/Ember.Component.html'>Ember.Component</a> or <a href='http://docs.angularjs.org/guide/directive'>Angular directives</a>.</p>
+
+<p>In this example, we've created a <code>&lt;donutchart/&gt;</code> component. Each chart is a self-contained, isolated unit, but it can observe data from the surrounding context via its <em>attributes</em>. Look at the template and javascript code to see how this works in practice. (The data-binding works in both directions &ndash; we're not using it here, but a component can change data that it has 'access' to.)</p>
+
+<p>Components can also fire events, which the parent <code>ractive</code> can listen to in the normal way. In this case we're listening for the <code>select</code> event &ndash; which each donut fires when the user moves over a segment &ndash; and responding by setting the <code>selected</code> property to the ID of the segment under the pointer.</p>
+			</div>
+
+			<pre id='template-tab'   class='prettyprint language-html <% selected === "template" ? "visible" : "hidden" %>'></pre>
+			<pre id='javascript-tab' class='prettyprint language-javascript <% selected === "javascript" ? "visible" : "hidden" %>'></pre>
+			<pre id='css-tab'        class='prettyprint language-css <% selected === "css" ? "visible" : "hidden" %>'></pre>
+		</div></script>
+
+	<script id="example-template" type="text/ractive">{{#months:i}}
+  <div class='box'>
+    <!-- the donut chart -->
+    <donutchart data='{{data}}' selected='{{id}}' delay='{{ i * 50 }}'
+      on-select='select'/>
+
+    <!-- the month name -->
+    <div class='label'>{{name}}</div>
+  </div>
+{{/months}}
+
+
+<!-- {{>donutchart}} -->
+<svg viewBox='0 0 100 100'>
+  <g transform='translate(50,50)'>
+    {{# getSegments( data ) :i}}
+      <polygon on-hover='select:{{id}}' class='donut-segment' fill='{{ colors[ id ] }}'
+        opacity='{{ !selected ? 1 : ( selected === id ? 1 : 0.2 ) }}'
+        points='{{ getSegmentPoints( ., 20, 50, c ) }}'
+      >
+    {{/ segments }}
+  </g>
+</svg>
+<!-- {{/donutchart}} --></script>
+
+	
+	<script src="lib/Ractive-legacy.js"></script>
+	<script src="lib/Ractive-events-tap.min.js"></script>
+	<script src="lib/highlight.js"></script>
+	<script src="lib/Ractive-events-hover.min.js"></script>
+	<script src="js/example.js"></script>
+
+	<script id="example-javascript">var template, mainTemplate, donutTemplate, DonutChart, ractive;
+
+// for the purposes of this demo, we need to extract the bit of the template
+// that relates to the donut chart component
+template = Ractive.parse( template );
+
+mainTemplate = template.main;
+donutTemplate = template.partials.donutchart;
+
+// we use Ractive.extend() to define our donut chart component
+DonutChart = Ractive.extend({
+  template: donutTemplate,
+
+  init: function ( options ) {
+    var self = this, delay = this.get( 'delay' );
+
+    // wait a bit, then animate in
+    setTimeout( function () {
+      self.animate( 'c', Math.PI * 2, {
+        duration: 800,
+        easing: 'easeOut'
+      });
+    }, delay );
+  },
+
+  data: {
+    c: 0, // we animate from zero to Math.PI * 2 (the number of radians in a circle)
+
+    // some colors. We could equally have passed in some colours via the component's
+    // attributes, e.g.
+    //
+    //     <rv-donutchart colors='{ "Dogs": "#000064", "Cats": "#729d34", "Rabbits": "#5050b4" }' ... />
+    //
+    // Any data passed through to the component in this fashion gets parsed with JSON.parse(),
+    // or failing that is treated as a string. So the above example is equivalent to the folling
+    colors: {
+      Dogs: '#000064',
+      Cats: '#729d34',
+      Rabbits: '#5050b4'
+    },
+
+    // process the data so we can turn it into donut segments
+    getSegments: function ( data ) {
+      var total, start, segments;
+
+      // tally up the total value
+      total = data.reduce( function ( previous, current ) {
+        return previous + current.value;
+      }, 0 );
+
+      // sort data, but clone first so we don't alter the original data
+      data = data.slice().sort( function ( a, b ) {
+        return b.value - a.value;
+      });
+
+      // find the start and end point of each segment
+      start = 0;
+
+      segments = data.map( function ( datum ) {
+        var size = datum.value / total, end = start + size, segment;
+
+        segment = {
+          id: datum.id,
+          start: start,
+          end: end
+        };
+
+        start = end;
+        return segment;
+      });
+
+      return segments;
+    },
+
+    // get an SVG points list for the segment
+    getSegmentPoints: function ( segment, innerRadius, outerRadius, c ) {
+      var points = [], i, angle, start, end, getPoint;
+
+      start = segment.start * c;
+      end = segment.end * c;
+
+      getPoint = function ( angle, radius ) {
+        return ( ( radius * Math.sin( angle ) ).toFixed( 2 ) + ',' + ( radius * -Math.cos( angle ) ).toFixed( 2 ) );
+      };
+
+      // get points along the outer edge of the segment
+      for ( angle = start; angle < end; angle += 0.05 ) {
+        points[ points.length ] = getPoint( angle, outerRadius );
+      }
+
+      points[ points.length ] = getPoint( end, outerRadius );
+
+      // get points along the inner edge of the segment
+      for ( angle = end; angle > start; angle -= 0.05 ) {
+        points[ points.length ] = getPoint( angle, innerRadius );
+      }
+
+      points[ points.length ] = getPoint( start, innerRadius );
+
+      // join them up as an SVG points list
+      return points.join( ' ' );
+    }
+  }
+});
+
+
+ractive = new Ractive({
+  el: example,
+  template: mainTemplate,
+  data: {
+    months: [
+      { name: 'January',   data: [ { id: 'Dogs', value: 4 }, { id: 'Cats', value: 3 }, { id: 'Rabbits', value: 7 } ] },
+      { name: 'February',  data: [ { id: 'Dogs', value: 2 }, { id: 'Cats', value: 7 }, { id: 'Rabbits', value: 3 } ] },
+      { name: 'March',     data: [ { id: 'Dogs', value: 5 }, { id: 'Cats', value: 4 }, { id: 'Rabbits', value: 6 } ] },
+      { name: 'April',     data: [ { id: 'Dogs', value: 6 }, { id: 'Cats', value: 8 }, { id: 'Rabbits', value: 4 } ] },
+      { name: 'May',       data: [ { id: 'Dogs', value: 8 }, { id: 'Cats', value: 9 }, { id: 'Rabbits', value: 5 } ] },
+      { name: 'June',      data: [ { id: 'Dogs', value: 3 }, { id: 'Cats', value: 2 }, { id: 'Rabbits', value: 2 } ] },
+      { name: 'July',      data: [ { id: 'Dogs', value: 4 }, { id: 'Cats', value: 4 }, { id: 'Rabbits', value: 8 } ] },
+      { name: 'August',    data: [ { id: 'Dogs', value: 2 }, { id: 'Cats', value: 5 }, { id: 'Rabbits', value: 9 } ] },
+      { name: 'September', data: [ { id: 'Dogs', value: 3 }, { id: 'Cats', value: 6 }, { id: 'Rabbits', value: 4 } ] },
+      { name: 'October',   data: [ { id: 'Dogs', value: 7 }, { id: 'Cats', value: 2 }, { id: 'Rabbits', value: 7 } ] },
+      { name: 'November',  data: [ { id: 'Dogs', value: 5 }, { id: 'Cats', value: 8 }, { id: 'Rabbits', value: 5 } ] },
+      { name: 'December',  data: [ { id: 'Dogs', value: 1 }, { id: 'Cats', value: 0 }, { id: 'Rabbits', value: 7 } ] }
+    ]
+  },
+
+  // this is where we tell Ractive to use the DonutChart constructor for any
+  // <rv-donutchart> components
+  components: {
+    donutchart: DonutChart
+  }
+});
+
+
+// when the user hovers over a segment, highlight that segment for
+// all the donut charts
+ractive.on({
+  select: function ( event, id ) {
+    if ( event.hover ) {
+      this.set( 'id', id );
+    } else {
+      this.set( 'id', null );
+    }
+  }
+})</script>
+
+	<script>initExample();</script></body></html>

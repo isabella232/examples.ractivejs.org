@@ -1,7 +1,0 @@
-{
-	"name": "Animated chart",
-	"slug": "animated-chart",
-	"libs": [
-		"reqwest.js"
-	]
-}
