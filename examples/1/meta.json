@@ -1,0 +1,8 @@
+{
+	"name": "Todos",
+	"slug": "todos",
+	"libs": [
+		"Ractive-events-keys.min.js",
+		"Ractive-transitions-slide.min.js"
+	]
+}

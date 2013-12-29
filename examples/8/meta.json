@@ -1,0 +1,7 @@
+{
+	"name": "Components",
+	"slug": "components",
+	"libs": [
+		"Ractive-events-hover.min.js"
+	]
+}

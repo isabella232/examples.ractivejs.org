@@ -1,0 +1,7 @@
+{
+	"name": "Ratings",
+	"slug": "ratings",
+	"libs": [
+		"Ractive-events-hover.min.js"
+	]
+}

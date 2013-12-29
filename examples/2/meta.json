@@ -1,0 +1,8 @@
+{
+	"name": "Comments",
+	"slug": "comments",
+	"libs": [
+		"showdown.js",
+		"Ractive-transitions-slide.min.js"
+	]
+}
