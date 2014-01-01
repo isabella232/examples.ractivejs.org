@@ -40,20 +40,33 @@ todoList = new Ractive({
 
 	data: {
 		items: items,
-		filter: function ( item, currentFilter ) {
-			return filters[ currentFilter ]( item );
+		filter: function ( item ) {
+			var filter = filters[ this.get( 'currentFilter' ) ];
+			return filter( item );
 		},
-		currentFilter: 'all'
+		currentFilter: 'all',
+
+		// These computed values are aware of their dependency on
+		// `items` because of `this.get( 'items' )` - and will
+		// automatically recompute and update the view when
+		// `items` changes.
+		completedTodos: function () {
+			return this.get( 'items' ).filter( filters.completed ).length;
+		},
+
+		activeTodos: function () {
+			return this.get( 'items' ).filter( filters.active ).length;
+		}
 	},
 
 	// We can define 'transitions', which are applied to elements on intro
 	// or outro. This is normally used for animation, but we can use it for
 	// other purposes, such as autoselecting an input's contents
 	transitions: {
-		select: function ( node, complete ) {
+		select: function ( t ) {
 			setTimeout( function () {
-				node.select();
-				complete();
+				t.node.select();
+				t.complete();
 			}, 0 );
 		}
 	}
@@ -100,14 +113,8 @@ todoList.on({
 	}
 });
 
-// When the model changes, recalculate the number of active and
-// completed todos, and persist to localStorage if possible
+// When the model changes, persist to localStorage if possible
 todoList.observe( 'items', function ( items ) {
-	this.set({
-		numActive: items.filter( filters.active ).length,
-		numCompleted: items.filter( filters.completed ).length
-	});
-
 	// persist to localStorage
 	if ( window.localStorage ) {
 		localStorage.setItem( 'ractive-todos', JSON.stringify( items ) );

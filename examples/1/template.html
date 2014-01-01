@@ -14,7 +14,7 @@
 				id='toggle-all'
 				type='checkbox'
 				on-click-change='toggle_all'
-				checked='{{ items.length === numCompleted }}'
+				checked='{{ items.length === completedTodos() }}'
 				intro='fade'
 				outro='fade'
 			>
@@ -29,7 +29,7 @@
 
 		<div id='footer' intro='fade' outro='slide'>
 			<span id='todo-count'>
-				<strong>{{ numActive }}</strong> {{ numActive === 1 ? 'item' : 'items' }} left
+				<strong>{{ activeTodos() }}</strong> {{ activeTodos() === 1 ? 'item' : 'items' }} left
 			</span>
 
 			<!-- switch filters -->
@@ -40,11 +40,11 @@
 			</ul>
 
 			<!-- hidden if no completed items are left -->
-			{{# numCompleted }}
+			{{# completedTodos() }}
 				<button id='clear-completed' on-tap='clear_completed'>
-					Clear completed ({{ numCompleted }})
+					Clear completed ({{ completedTodos() }})
 				</button>
-			{{/ numCompleted }}
+			{{/ completedTodos() }}
 		</div>
 	{{/items.length}}
 
@@ -52,7 +52,7 @@
 
 
 <!-- {{>item}} -->
-{{# filter( (.), currentFilter ) }}
+{{# filter( this ) }}
 <li intro='slide:fast' outro='slide:fast' class='{{ .completed ? "completed" : "" }} {{ .editing ? "editing" : "" }}'>
 	<div class='view'>
 		<input class='toggle' type='checkbox' checked='{{.completed}}'>
