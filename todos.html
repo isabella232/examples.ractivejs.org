@@ -2,6 +2,8 @@
 <html lang="en-GB"><head><meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 
+	<link rel="icon" type="image/png" href="favicon.png">
+
 	<title>Todos | Examples | Ractive.js</title>
 
 	
@@ -368,7 +370,7 @@ label[for='toggle-all'] {
         id='toggle-all'
         type='checkbox'
         on-click-change='toggle_all'
-        checked='{{ items.length === numCompleted }}'
+        checked='{{ items.length === completedTodos() }}'
         intro='fade'
         outro='fade'
       >
@@ -383,7 +385,7 @@ label[for='toggle-all'] {
 
     <div id='footer' intro='fade' outro='slide'>
       <span id='todo-count'>
-        <strong>{{ numActive }}</strong> {{ numActive === 1 ? 'item' : 'items' }} left
+        <strong>{{ activeTodos() }}</strong> {{ activeTodos() === 1 ? 'item' : 'items' }} left
       </span>
 
       <!-- switch filters -->
@@ -394,11 +396,11 @@ label[for='toggle-all'] {
       </ul>
 
       <!-- hidden if no completed items are left -->
-      {{# numCompleted }}
+      {{# completedTodos() }}
         <button id='clear-completed' on-tap='clear_completed'>
-          Clear completed ({{ numCompleted }})
+          Clear completed ({{ completedTodos() }})
         </button>
-      {{/ numCompleted }}
+      {{/ completedTodos() }}
     </div>
   {{/items.length}}
 
@@ -406,7 +408,7 @@ label[for='toggle-all'] {
 
 
 <!-- {{>item}} -->
-{{# filter( (.), currentFilter ) }}
+{{# filter( this ) }}
 <li intro='slide:fast' outro='slide:fast' class='{{ .completed ? "completed" : "" }} {{ .editing ? "editing" : "" }}'>
   <div class='view'>
     <input class='toggle' type='checkbox' checked='{{.completed}}'>
@@ -473,20 +475,33 @@ todoList = new Ractive({
 
   data: {
     items: items,
-    filter: function ( item, currentFilter ) {
-      return filters[ currentFilter ]( item );
+    filter: function ( item ) {
+      var filter = filters[ this.get( 'currentFilter' ) ];
+      return filter( item );
     },
-    currentFilter: 'all'
+    currentFilter: 'all',
+
+    // These computed values are aware of their dependency on
+    // `items` because of `this.get( 'items' )` - and will
+    // automatically recompute and update the view when
+    // `items` changes.
+    completedTodos: function () {
+      return this.get( 'items' ).filter( filters.completed ).length;
+    },
+
+    activeTodos: function () {
+      return this.get( 'items' ).filter( filters.active ).length;
+    }
   },
 
   // We can define 'transitions', which are applied to elements on intro
   // or outro. This is normally used for animation, but we can use it for
   // other purposes, such as autoselecting an input's contents
   transitions: {
-    select: function ( node, complete ) {
+    select: function ( t ) {
       setTimeout( function () {
-        node.select();
-        complete();
+        t.node.select();
+        t.complete();
       }, 0 );
     }
   }
@@ -533,14 +548,8 @@ todoList.on({
   }
 });
 
-// When the model changes, recalculate the number of active and
-// completed todos, and persist to localStorage if possible
+// When the model changes, persist to localStorage if possible
 todoList.observe( 'items', function ( items ) {
-  this.set({
-    numActive: items.filter( filters.active ).length,
-    numCompleted: items.filter( filters.completed ).length
-  });
-
   // persist to localStorage
   if ( window.localStorage ) {
     localStorage.setItem( 'ractive-todos', JSON.stringify( items ) );
