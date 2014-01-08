@@ -25,9 +25,9 @@
 		});
 
 		// inject the example itself
-		info.nodes[ 'template-tab' ].innerText = template;
-		info.nodes[ 'javascript-tab' ].innerText = read( 'example-javascript' );
-		info.nodes[ 'css-tab' ].innerText = read( 'example-css' );
+		info.nodes[ 'template-tab' ].textContent = template;
+		info.nodes[ 'javascript-tab' ].textContent = read( 'example-javascript' );
+		info.nodes[ 'css-tab' ].textContent = read( 'example-css' );
 
 		// prettyprint
 		[].forEach.call( document.querySelectorAll( '.prettyprint' ), function ( el ) {
@@ -47,5 +47,5 @@ ga('create', 'UA-5602942-4', 'examples.ractivejs.org');
 ga('send', 'pageview');
 
 function read ( id ) {
-	return document.getElementById( id ).innerText;
+	return document.getElementById( id ).textContent;
 }
