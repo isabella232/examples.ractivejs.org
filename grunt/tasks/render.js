@@ -17,7 +17,7 @@ module.exports = function ( grunt ) {
 
 		// Render index.html
 		ractive = new Ractive({
-			template: templates.index,
+			template: grunt.template.process( templates.index ),
 			data: {
 				examples: examples
 			},

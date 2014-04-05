@@ -1,8 +1,7 @@
 module.exports = {
 	main: {
 		files: {
-			'build/examples.css': 'scss/example/example.scss',
-			'build/index.css': 'scss/index/index.scss'
+			'build/min.css': 'scss/main.scss'
 		}
 	}
 };

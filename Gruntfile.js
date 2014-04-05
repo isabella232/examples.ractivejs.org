@@ -8,7 +8,16 @@ module.exports = function ( grunt ) {
     var config, dependency;
 
     config = {
-        pkg: grunt.file.readJSON( 'package.json' )
+        pkg: grunt.file.readJSON( 'package.json' ),
+
+        nav: function ( selected ) {
+            var partial = grunt.file.read( 'shared/partials/nav.html' );
+            return grunt.template.process( partial, {
+                data: { id: selected }
+            });
+        },
+        head: grunt.file.read( 'shared/partials/head.html' ),
+        footer: grunt.file.read( 'shared/partials/footer.html' )
     };
 
     // Read config files from the `grunt/config/` folder
