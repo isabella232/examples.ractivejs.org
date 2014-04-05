@@ -34,7 +34,7 @@ module.exports = function ( grunt ) {
 
 			try {
 				ractive = new Ractive({
-					template: templates.example,
+					template: grunt.template.process( templates.example ),
 					data: {
 						example: example,
 						clean: function ( str ) {

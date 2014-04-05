@@ -2,18 +2,19 @@
 <html lang='en-GB'>
 <head>
 	<meta charset='utf-8'>
-	<meta http-equiv='X-UA-Compatible' content='IE=Edge,chrome=1'>
-
-	<link rel='icon' type='image/png' href='favicon.png'>
-
 	<title>[[meta.name]] | Examples | Ractive.js</title>
 
-	<!-- CSS -->
-	<!--<link rel='stylesheet' href='../shared.css'>-->
-	<link rel='stylesheet' href='examples.css'>
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+
+	<link rel='icon' type='image/png' href='assets/favicon.png'>
+	<link rel='stylesheet' href='min.css'>
 
 	<!--[if lte IE 8]>
-		<script src='../lib/aight.min.js'></script>
+		<script src='assets/respond.min.js'></script>
+	<![endif]-->
+
+	<!--[if lte IE 8]>
+		<script src='lib/aight.min.js'></script>
 		<script>
 			window.internetExploder = true;
 		</script>
@@ -26,38 +27,43 @@
 
 <body class='example'>
 
+	<%= nav('examples') %>
+
 	<header>
 		<h1>[[meta.name]]</h1>
-		<a class='more-examples' href='./'>more Ractive.js examples &raquo;</a>
 	</header>
 
-	<div class='example-container'>
-		<div id='example'>
-			<noscript>
-				<p class='message'>Please <a href='www.enable-javascript.com'>enable JavaScript</a> to view this example.</p>
-			</noscript>
+	<main>
+		<div class='example-container'>
+			<div id='example'>
+				<noscript>
+					<p class='message'>Please <a href='www.enable-javascript.com'>enable JavaScript</a> to view this example.</p>
+				</noscript>
+			</div>
 		</div>
-	</div>
 
-	<div id='info'></div>
+		<div id='info'></div>
+	</main>
+
+	<%= footer %>
 
 
 	<script id='infoTemplate' type='ractive'>
 		<div class='controls'>
-			<span on-tap='select:readme'     class='tab <% selected === "readme"     ? "selected" : "" %>'>readme</span>
-			<span on-tap='select:template'   class='tab <% selected === "template"   ? "selected" : "" %>'>template</span>
-			<span on-tap='select:javascript' class='tab <% selected === "javascript" ? "selected" : "" %>'>javascript</span>
-			<span on-tap='select:css'        class='tab <% selected === "css"        ? "selected" : "" %>'>css</span>
+			<span on-tap='select:readme'     class='tab {{ selected === "readme"     ? "selected" : "" }}'>readme</span>
+			<span on-tap='select:template'   class='tab {{ selected === "template"   ? "selected" : "" }}'>template</span>
+			<span on-tap='select:javascript' class='tab {{ selected === "javascript" ? "selected" : "" }}'>javascript</span>
+			<span on-tap='select:css'        class='tab {{ selected === "css"        ? "selected" : "" }}'>css</span>
 		</div>
 
 		<div class='wrapper'>
-			<div id='readme-tab'     class='<% selected === "readme" ? "visible" : "hidden" %>'>
+			<div id='readme-tab'     class='{{ selected === "readme" ? "visible" : "hidden" }}'>
 				[[[clean(readme)]]]
 			</div>
 
-			<pre id='template-tab'   class='prettyprint language-html <% selected === "template" ? "visible" : "hidden" %>'></pre>
-			<pre id='javascript-tab' class='prettyprint language-javascript <% selected === "javascript" ? "visible" : "hidden" %>'></pre>
-			<pre id='css-tab'        class='prettyprint language-css <% selected === "css" ? "visible" : "hidden" %>'></pre>
+			<pre id='template-tab'   class='prettyprint language-html {{ selected === "template" ? "visible" : "hidden" }}'></pre>
+			<pre id='javascript-tab' class='prettyprint language-javascript {{ selected === "javascript" ? "visible" : "hidden" }}'></pre>
+			<pre id='css-tab'        class='prettyprint language-css {{ selected === "css" ? "visible" : "hidden" }}'></pre>
 		</div>
 	</script>
 

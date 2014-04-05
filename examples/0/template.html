@@ -1,25 +1,4 @@
-<div class='left'>
-	<p>
-		Today is {{ days[ date.getDay() ] }}
-		the {{ addSuffix( date.getDate() ) }}
-		of {{ months[ date.getMonth() ] }}.
-
-		The time is:
-	</p>
-
-	<span class='time'>
-		<!-- we use pad() to ensure all numbers have two digits -->
-		<span class='hours'>
-			{{ pad( date.getHours() ) }}
-		</span>:<span class='minutes'>
-			{{ pad( date.getMinutes() ) }}
-		</span>:<span class='seconds'>
-			{{ pad( date.getSeconds() ) }}
-		</span>
-	</span>
-</div>
-
-<div class='right'>
+<div class='clock'>
 	<div class='square'> <!-- so the SVG keeps its aspect ratio -->
 		<svg viewBox='0 0 100 100'>
 
@@ -65,4 +44,25 @@
 
 		</svg>
 	</div>
+</div>
+
+<div class='left'>
+	<p>
+		Today is {{ days[ date.getDay() ] }}
+		the {{ addSuffix( date.getDate() ) }}
+		of {{ months[ date.getMonth() ] }}.
+
+		The time is:
+	</p>
+
+	<span class='time'>
+		<!-- we use pad() to ensure all numbers have two digits -->
+		<span class='hours'>
+			{{ pad( date.getHours() ) }}
+		</span>:<span class='minutes'>
+			{{ pad( date.getMinutes() ) }}
+		</span>:<span class='seconds'>
+			{{ pad( date.getSeconds() ) }}
+		</span>
+	</span>
 </div>
