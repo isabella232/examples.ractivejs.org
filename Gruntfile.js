@@ -1,125 +1,34 @@
+/* The one-size-fits-all key to Grunt.js happiness - http://bit.ly/grunt-happy */
+
+/*global module:false*/
 module.exports = function ( grunt ) {
 
-	'use strict';
+    'use strict';
 
-	grunt.initConfig({
-		pkg: grunt.file.readJSON( 'package.json' ),
+    var config, dependency;
 
-		watch: {
-			examples: {
-				files: [ 'examples/**/*', 'root/**/*', 'templates/**/*' ],
-				tasks: 'build'
-			},
-			sass: {
-				files: [ 'scss/**/*.scss' ],
-				tasks: 'sass:main'
-			}
-		},
+    config = {
+        pkg: grunt.file.readJSON( 'package.json' )
+    };
 
-		clean: {
-			build: [ 'build' ]
-		},
+    // Read config files from the `grunt/config/` folder
+    grunt.file.expand( 'grunt/config/*.js' ).forEach( function ( path ) {
+        var property = /grunt\/config\/(.+)\.js/.exec( path )[1],
+            module = require( './' + path );
+        config[ property ] = typeof module === 'function' ? module( grunt ) : module;
+    });
 
-		copy: {
-			root: {
-				files: [{
-					cwd: 'root',
-					src: '**/*',
-					expand: true,
-					dest: 'build'
-				}]
-			}
-		},
+    // Initialise grunt
+    grunt.initConfig( config );
 
-		dir2json: {
-			examples: {
-				root: 'examples',
-				dest: 'tmp/examples.json'
-			}
-		},
+    // Load development dependencies specified in package.json
+    for ( dependency in config.pkg.devDependencies ) {
+        if ( /^grunt-/.test( dependency) ) {
+            grunt.loadNpmTasks( dependency );
+        }
+    }
 
-		sass: {
-			main: {
-				files: {
-					'build/examples.css': 'scss/example/example.scss',
-					'build/index.css': 'scss/index/index.scss'
-				}
-			}
-		}
-	});
-
-
-
-	grunt.loadNpmTasks( 'grunt-contrib-watch' );
-	grunt.loadNpmTasks( 'grunt-contrib-clean' );
-	grunt.loadNpmTasks( 'grunt-contrib-copy' );
-	grunt.loadNpmTasks( 'grunt-contrib-sass' );
-	grunt.loadNpmTasks( 'grunt-dir2json' );
-
-	grunt.registerTask( 'render', function () {
-		var Ractive, templates, examples, ractive, rendered;
-
-		Ractive = require( 'ractive' );
-
-		templates = {
-			index: grunt.file.read( 'templates/index.html' ),
-			example: grunt.file.read( 'templates/example.html' )
-		};
-
-		// Gather example data
-		examples = grunt.file.readJSON( grunt.config( 'dir2json.examples.dest' ) );
-
-		// Render index.html
-		ractive = new Ractive({
-			template: templates.index,
-			data: {
-				examples: examples
-			},
-			preserveWhitespace: true
-		});
-
-		rendered = ractive.toHTML();
-		grunt.file.write( 'build/index.html', rendered );
-
-
-		// Render example pages
-		examples.forEach( function ( example ) {
-			var ractive, rendered;
-
-			try {
-				ractive = new Ractive({
-					template: templates.example,
-					data: {
-						example: example,
-						clean: function ( str ) {
-							return str.replace( /\t/g, '  ' );
-						}
-					},
-					preserveWhitespace: true,
-					delimiters: [ '[[', ']]' ],
-					tripleDelimiters: [ '[[[', ']]]' ]
-				});
-			} catch ( err ) {
-				console.error( err.message || err );
-			}
-
-
-			rendered = ractive.toHTML();
-			grunt.file.write( 'build/' + example.meta.slug + '.html', rendered );
-		});
-	});
-
-	grunt.registerTask( 'build', [
-		'clean:build',
-		'copy:root',
-		'sass:main',
-		'dir2json:examples',
-		'render'
-	]);
-
-	grunt.registerTask( 'default', [
-		'build',
-		'watch'
-	]);
+    // Load tasks from the `grunt-tasks/` folder
+    grunt.loadTasks( 'grunt/tasks' );
 
 };
