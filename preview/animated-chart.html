@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+	<title>Animated chart | Examples | Ractive.js</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link rel="icon" type="image/png" href="assets/favicon.png">
+	<link rel="stylesheet" href="min.css">
+
+	
+
+	
+
+	<style id="example-css" type="text/css">svg {
+	width: 100%;
+	height: 100%;
+}
+
+#svg_wrapper {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.temperatures {
+	position: relative;
+	width: 100%;
+	height: 20em;
+	padding: 1em 0 0 0;
+	background-color: #fafafa;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.chart-header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 2em;
+	padding: 0.5em;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.radio-group {
+	display: inline-block;
+	float: right;
+	text-align: right;
+	padding: 0.5em 0 0 0;
+}
+
+.chart-header h3 {
+	font-family: 'Voltaire';
+	font-weight: normal;
+	float: left;
+	margin: 0;
+	border: none;
+}
+
+.chart-header select {
+	position: relative;
+	top: 0.1em;
+	float: left;
+	clear: left;
+	font-size: inherit;
+	font-family: inherit;
+	z-index: 7;
+}
+
+.chart-header label {
+	position: relative;
+	z-index: 7;
+	display: block;
+}
+
+.chart-header p {
+	float: left;
+	clear: left;
+	margin: 0;
+}
+
+.chart {
+	position: relative;
+	padding: 0 0 3em 0;
+	width: 100%;
+	height: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.temperature-band {
+	fill-opacity: 0.3;
+	stroke-width: 2;
+}
+
+.freezing {
+	stroke: #ccc;
+	stroke-width: 1;
+}
+
+.freezing-label-bg, .freezing-label {
+	font-family: 'Helvetica Neue', 'Arial';
+	font-size: 0.8em;
+	text-anchor: middle;
+}
+
+.freezing-label-bg {
+	stroke: #fafafa;
+	stroke-width: 4;
+}
+
+.freezing-label {
+	stroke: none;
+	fill: #aaa;
+}
+
+.marker circle {
+	fill: white;
+	stroke: black;
+	stroke-width: 1;
+}
+
+.marker	text {
+	text-anchor: middle;
+	font-family: 'Helvetica Neue', 'Arial';
+	font-size: 0.6em;
+	font-weight: bold;
+	fill: #333;
+}
+
+.month-labels {
+	position: absolute;
+	left: 0;
+	bottom: 1em;
+	width: 100%;
+}
+
+.month-labels span {
+	text-align: center;
+	float: left;
+	display: block;
+	font-family: 'Helvetica Neue', 'Arial';
+	font-size: 0.6em;
+}</style></head>
+
+<body class="example"><nav><div class="nav-inner"><a href="http://ractivejs.org">Ractive.js</a>
+
+		<ul><li><a href=http://ractivejs.org/60-second-setup>60 second setup</a></li>
+			<li><a href=http://learn.ractivejs.org>Tutorials</a></li>
+			<li class=selected><a href=http://examples.ractivejs.org>Examples</a></li>
+			<li><a href=http://docs.ractivejs.org>Docs</a></li>
+			<li><a href=http://ractivejs.org/plugins>Plugins</a></li>
+			<li><a href=http://blog.ractivejs.org>Blog</a></li>
+			<li class=github-small><a href=https://github.com/ractivejs/ractive>GitHub</a></li></ul>
+
+		<a class="github-wide" href="https://github.com/ractivejs/ractive">GitHub</a>
+
+		<button id="nav-toggle">&#9776;</button></div></nav>
+
+
+	<header><h1>Animated chart</h1></header>
+
+	<main><div class="example-container"><div id="example"><noscript><p class=message>Please <a href=www.enable-javascript.com>enable JavaScript</a> to view this example.</p></noscript></div></div>
+
+		<div id="info"></div></main>
+
+	<footer><p>Ractive.js is a free and open source project released under the MIT license.</p></footer>
+
+
+
+	<script id="infoTemplate" type="ractive"><div class='controls'>
+			<span on-tap='select:readme'     class='tab {{ selected === "readme"     ? "selected" : "" }}'>readme</span>
+			<span on-tap='select:template'   class='tab {{ selected === "template"   ? "selected" : "" }}'>template</span>
+			<span on-tap='select:javascript' class='tab {{ selected === "javascript" ? "selected" : "" }}'>javascript</span>
+			<span on-tap='select:css'        class='tab {{ selected === "css"        ? "selected" : "" }}'>css</span>
+		</div>
+
+		<div class='wrapper'>
+			<div id='readme-tab'     class='{{ selected === "readme" ? "visible" : "hidden" }}'>
+				<p>Making interactive charts is hard. Charts have many components besides the data itself &ndash; controls, axes, labels, annotations &ndash; and they often don't need to update at the same time as each other. Normally, you're faced with a choice between having several different <code>render</code> functions, or wastefully re-rendering the entire chart when things change.</p>
+
+<p>For this reason, dedicated charting libraries have become popular. And that's a shame, because it means you're stuck with line charts and bar charts and pie charts and scatter charts, and don't you dare have any data that's better represented using a less conventional chart type, like this plot of high and low temperatures.</p>
+
+<p>Faced with a choice between freedom and ease of use, many developers turn to <a href='d3js.org'>D3</a>. D3 is a terrific library, and I won't hear a bad word said about it, but it doesn't solve the problem of efficiently updating different components of a chart because it has no concept of <em>state</em>.
+
+<p><span class='logo'>Ractive.js</span> takes a fundamentally different approach to other libraries. Rather than programmatically building up the different components of your chart, and writing logic to update those components, you write your SVG the same way you'd write an HTML template. When it's time to update the chart, you just throw the new state at it &ndash; the dependency tracking ensures that we only re-render what's changed. This makes it trivially easy to animate the chart when the user changes city via the drop-down menu.</p>
+
+<p>Note also that we don't need to faff about with event handlers and render logic to switch between celsius and fahrenheit &ndash; when the user switches between them, <span class='logo'>Ractive.js</span> knows what to do, because the labels' dependency on <code>degreeType</code> is written into the template.</p>
+			</div>
+
+			<pre id='template-tab'   class='prettyprint language-html {{ selected === "template" ? "visible" : "hidden" }}'></pre>
+			<pre id='javascript-tab' class='prettyprint language-javascript {{ selected === "javascript" ? "visible" : "hidden" }}'></pre>
+			<pre id='css-tab'        class='prettyprint language-css {{ selected === "css" ? "visible" : "hidden" }}'></pre>
+		</div></script>
+
+	<script id="example-template" type="text/ractive"><div class='temperatures'>
+
+  <!-- header and options -->
+  <div class='chart-header'>
+    <h3>Average high and low temperature</h3>
+
+    <!-- switch between celsius and fahrenheit -->
+    <div class='radio-group'>
+      <label>°C <input type='radio' name='{{degreeType}}' value='celsius' checked></label>
+      <label>°F <input type='radio' name='{{degreeType}}' value='fahrenheit'></label>
+    </div>
+
+    <!-- dropdown menu -->
+    <select value='{{selected}}'>
+      {{#cities:i}}
+      <option value='{{i}}'>{{name}}</option>
+      {{/cities}}
+    </select>
+  </div>
+
+  <!-- the chart -->
+  <div class='chart'>
+    <div id='svg_wrapper'> <!-- needed to determine size of SVG element in Firefox -->
+      <svg id='svg'>
+
+        <!-- gradient - higher temperatures are redder, lower temperatures are bluer -->
+        <defs>
+          <linearGradient id='gradient' x2='0' y2='100%' gradientUnits='userSpaceOnUse'>
+            <stop offset='0%' stop-color='rgb(255,0,0)' />
+            <stop offset='100%' stop-color='rgb(0,0,255)' />
+          </linearGradient>
+        </defs>
+
+        <!-- horizontal line representing freezing -->
+        <g transform='translate( 0, {{ yScale(0) }} )'>
+          <line class='freezing' x2='{{width}}'/>
+          <text class='freezing-label-bg' x='{{ xScale(6) }}' y='0.3em'>freezing</text>
+          <text class='freezing-label' x='{{ xScale(6) }}' y='0.3em'>freezing</text>
+        </g>
+
+        {{#selectedCity}}
+
+          <!-- the band -->
+          <polygon fill='url(#gradient)' stroke='url(#gradient)' class='temperature-band' points='{{ band(months) }}'/>
+
+          {{#months:i}}
+            <!-- point markers for average highs -->
+            <g class='marker' transform='translate({{ xScale(i+0.5) }},{{ yScale(high) }})'>
+              <circle r='2'/>
+              <text y='-10'>{{ format(high) }}</text>
+            </g>
+
+            <!-- point markers for average lows -->
+            <g class='marker' transform='translate({{ xScale(i+0.5) }},{{ yScale(low) }})'>
+              <circle r='2'/>
+              <text y='15'>{{ format(low) }}</text>
+            </g>
+          {{/months}}
+        {{/selectedCity}}
+      </svg>
+    </div>
+
+    <div class='month-labels'>
+      {{#monthNames:i}}
+        <span style='width: {{ 100 / monthNames.length }}%;'>{{ monthNames[i] }}</span>
+      {{/monthNames}}
+    </div>
+  </div>
+</div></script>
+
+	
+	<script src="lib/Ractive-legacy.js"></script>
+	<script src="lib/Ractive-events-tap.min.js"></script>
+	<script src="lib/highlight.js"></script>
+	<script src="lib/reqwest.js"></script>
+	<script src="js/example.js"></script>
+
+	<script id="example-javascript">var linearScale, getPointsArray, resize, cities, ractive;
+
+// this returns a function that scales a value from a given domain
+// to a given range. Hat-tip to D3
+linearScale = function ( domain, range ) {
+  var d0 = domain[0], r0 = range[0], multipler = ( range[1] - r0 ) / ( domain[1] - d0 );
+
+  return function ( num ) {
+    return r0 + ( ( num - d0 ) * multipler );
+  };
+};
+
+// this function takes an array of values, and returns an array of
+// points plotted according to the given x scale and y scale
+getPointsArray = function ( array, xScale, yScale, point ) {
+  var result = array.map( function ( month, i ) {
+    return xScale( i + 0.5 ) + ',' + yScale( month[ point ] );
+  });
+
+  // add the december value in front of january, and the january value after
+  // december, to show the cyclicality
+  result.unshift( xScale( -0.5 ) + ',' + yScale( array[ array.length - 1 ][ point ] ) );
+  result.push( xScale( array.length + 0.5 ) + ',' + yScale( array[0][ point ] ) );
+
+  return result;
+};
+
+ractive = new Ractive({
+  el: example,
+  template: template,
+  data: {
+    format: function ( val ) {
+      if ( this.get( 'degreeType' ) === 'fahrenheit' ) {
+        // convert celsius to fahrenheit
+        val = ( val * 1.8 ) + 32;
+      }
+
+      return val.toFixed( 1 ) + '°';
+    },
+
+    // this function returns the SVG string for the polygon representing the
+    // temperature band
+    band: function ( months ) {
+      var xScale, yScale, high = [], low = [];
+
+      xScale = this.get( 'xScale' );
+      yScale = this.get( 'yScale' );
+
+      high = getPointsArray( months, xScale, yScale, 'high' );
+      low = getPointsArray( months, xScale, yScale, 'low' );
+
+      return high.concat( low.reverse() ).join( ' ' );
+    },
+
+    monthNames: [ 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D' ]
+  }
+});
+
+
+// because we're using SVG, we need to manually redraw
+// when the container resizes. You *can* use percentages
+// instead of pixel/em lengths, but not in transforms
+resize = function () {
+  var width, height;
+
+  width = ractive.nodes.svg_wrapper.clientWidth;
+  height = ractive.nodes.svg_wrapper.clientHeight;
+
+  ractive.set({
+    width: width,
+    height: height
+  });
+};
+
+// recompute xScale and yScale when we need to
+ractive.observe({
+  width: function ( width ) {
+    this.set( 'xScale', linearScale([ 0, 12 ], [ 0, width ]) );
+  },
+  height: function ( height ) {
+    this.set( 'yScale', linearScale([ -10, 42 ], [ height - 20, 25 ]) );
+  }
+});
+
+// update width and height when window resizes
+window.addEventListener( 'resize', resize );
+resize();
+
+
+// respond to user input
+ractive.observe( 'selected', function ( index ) {
+  this.animate( 'selectedCity', cities[ index ], {
+    easing: 'easeOut',
+    duration: 300
+  });
+});
+
+
+// load our data
+reqwest({ url: 'assets/temperatures.json', type: 'json' }).then( function ( data ) {
+  cities = data;
+
+  ractive.set({
+    cities: cities,
+    selectedCity: cities[0] // initialise to London
+  });
+});</script>
+
+	<script>initExample();</script></body></html>

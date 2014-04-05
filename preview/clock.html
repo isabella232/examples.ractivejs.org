@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+	<title>Clock | Examples | Ractive.js</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link rel="icon" type="image/png" href="assets/favicon.png">
+	<link rel="stylesheet" href="min.css">
+
+	
+
+	
+
+	<style id="example-css" type="text/css">.clock {
+	width: 30%;
+	float: left;
+	margin: 0 1em 0 0;
+}
+
+#example p {
+	margin: 1em 0 0 0;
+}
+
+.time {
+	font-family: 'Voltaire';
+	font-size: 4em;
+	margin: 0;
+}
+
+
+.square {
+	position: relative;
+	width: 100%;
+	height: 0;
+	padding-bottom: 100%;
+}
+
+svg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+.clock-face {
+	stroke: #333;
+	fill: white;
+}
+
+.minor {
+	stroke: #999;
+	stroke-width: 0.5;
+}
+
+.major {
+	stroke: #333;
+	stroke-width: 1;
+}
+
+.hour {
+	stroke: #333;
+}
+
+.minute {
+	stroke: #666;
+}
+
+.second, .second-counterweight {
+	stroke: rgb(180,0,0);
+}
+
+.second-counterweight {
+	stroke-width: 3;
+}
+</style></head>
+
+<body class="example"><nav><div class="nav-inner"><a href="http://ractivejs.org">Ractive.js</a>
+
+		<ul><li><a href=http://ractivejs.org/60-second-setup>60 second setup</a></li>
+			<li><a href=http://learn.ractivejs.org>Tutorials</a></li>
+			<li class=selected><a href=http://examples.ractivejs.org>Examples</a></li>
+			<li><a href=http://docs.ractivejs.org>Docs</a></li>
+			<li><a href=http://ractivejs.org/plugins>Plugins</a></li>
+			<li><a href=http://blog.ractivejs.org>Blog</a></li>
+			<li class=github-small><a href=https://github.com/ractivejs/ractive>GitHub</a></li></ul>
+
+		<a class="github-wide" href="https://github.com/ractivejs/ractive">GitHub</a>
+
+		<button id="nav-toggle">&#9776;</button></div></nav>
+
+
+	<header><h1>Clock</h1></header>
+
+	<main><div class="example-container"><div id="example"><noscript><p class=message>Please <a href=www.enable-javascript.com>enable JavaScript</a> to view this example.</p></noscript></div></div>
+
+		<div id="info"></div></main>
+
+	<footer><p>Ractive.js is a free and open source project released under the MIT license.</p></footer>
+
+
+
+	<script id="infoTemplate" type="ractive"><div class='controls'>
+			<span on-tap='select:readme'     class='tab {{ selected === "readme"     ? "selected" : "" }}'>readme</span>
+			<span on-tap='select:template'   class='tab {{ selected === "template"   ? "selected" : "" }}'>template</span>
+			<span on-tap='select:javascript' class='tab {{ selected === "javascript" ? "selected" : "" }}'>javascript</span>
+			<span on-tap='select:css'        class='tab {{ selected === "css"        ? "selected" : "" }}'>css</span>
+		</div>
+
+		<div class='wrapper'>
+			<div id='readme-tab'     class='{{ selected === "readme" ? "visible" : "hidden" }}'>
+				<p>This example demonstrates the use of expressions to simplify the process of turning raw data (such as the current time) into a renderable view that uses that data in many different ways.</p>
+
+<p>Normally, you'd probably have a <code>render</code> function which got all the information we need to update (the day, date, month, hour, minute, second) and calculated any derived values (the rotation of the clock hands, the suffix to append to the date), then updated the view one element at a time.</p>
+
+<p>If you wanted to minimise interactions with the DOM (which are bad for performance) then you'd have to store all these values so you could compare them between renders.</p>
+
+<p>Or perhaps you'd have a bunch of different views &ndash; one for the 'Today is...' sentence, one for the digital clock, one for the analogue clock (or possibly one for each of the analogue clock's hands) &ndash; each with their own unique <code>render</code> method. You'd still have to store a load of different references, but at least your code would look neater.</p>
+
+<p>With <span class='logo'>Ractive.js</span>, you only need to store a single reference to the <code>ractive</code> object, and the render function looks like this:</p>
+
+<pre>
+ractive.set( 'date', new Date() );
+</pre>
+
+<p>And that's it &ndash; all the state management and dependency tracking is done for you.</p>
+			</div>
+
+			<pre id='template-tab'   class='prettyprint language-html {{ selected === "template" ? "visible" : "hidden" }}'></pre>
+			<pre id='javascript-tab' class='prettyprint language-javascript {{ selected === "javascript" ? "visible" : "hidden" }}'></pre>
+			<pre id='css-tab'        class='prettyprint language-css {{ selected === "css" ? "visible" : "hidden" }}'></pre>
+		</div></script>
+
+	<script id="example-template" type="text/ractive"><div class='clock'>
+  <div class='square'> <!-- so the SVG keeps its aspect ratio -->
+    <svg viewBox='0 0 100 100'>
+
+      <!-- first create a group and move it to 50,50 so
+           all co-ords are relative to the center -->
+      <g transform='translate(50,50)'>
+        <circle class='clock-face' r='48'/>
+
+        <!-- markers every minute (major markers every 5 minutes) -->
+        {{#minor:i}}
+          <line class='minor' y1='42' y2='45' transform='rotate( {{
+            360 * i / minor.length
+          }} )'/>
+        {{/minor}}
+
+        {{#major:i}}
+          <line class='major' y1='35' y2='45' transform='rotate( {{
+            360 * i / major.length
+          }} )'/>
+        {{/major}}
+
+        <!-- hour hand -->
+        <line class='hour' y1='2' y2='-20' transform='rotate( {{
+          30 * date.getHours() +
+          date.getMinutes() / 2
+        }} )'/>
+
+        <!-- minute hand -->
+        <line class='minute' y1='4' y2='-30' transform='rotate( {{
+          6 * date.getMinutes() +
+          date.getSeconds() / 10
+        }} )'/>
+
+        <!-- second hand -->
+        <g transform='rotate( {{
+          6 * date.getSeconds()
+        }} )'>
+          <line class='second' y1='10' y2='-38'/>
+          <line class='second-counterweight' y1='10' y2='2'/>
+        </g>
+
+      </g>
+
+    </svg>
+  </div>
+</div>
+
+<div class='left'>
+  <p>
+    Today is {{ days[ date.getDay() ] }}
+    the {{ addSuffix( date.getDate() ) }}
+    of {{ months[ date.getMonth() ] }}.
+
+    The time is:
+  </p>
+
+  <span class='time'>
+    <!-- we use pad() to ensure all numbers have two digits -->
+    <span class='hours'>
+      {{ pad( date.getHours() ) }}
+    </span>:<span class='minutes'>
+      {{ pad( date.getMinutes() ) }}
+    </span>:<span class='seconds'>
+      {{ pad( date.getSeconds() ) }}
+    </span>
+  </span>
+</div>
+</script>
+
+	
+	<script src="lib/Ractive-legacy.js"></script>
+	<script src="lib/Ractive-events-tap.min.js"></script>
+	<script src="lib/highlight.js"></script>
+	<script src="js/example.js"></script>
+
+	<script id="example-javascript">// create our ractive...
+var ractive = new Ractive({
+  el: example,
+  template: template,
+  data: {
+    date: new Date(),
+    days: [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
+    months: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+
+    // add suffix to numbers, e.g. 2 -> '2nd', 14 -> '14th'
+    addSuffix: function ( num ) {
+      // special case - any number ending with 10-19 is suffixed with 'th'
+      if ( num % 100 >= 10 && num % 100 <= 19 ) {
+        return num + 'th';
+      }
+
+      switch ( num % 10 ) {
+        case 1: return num + 'st';
+        case 2: return num + 'nd';
+        case 3: return num + 'rd';
+      }
+
+      return num + 'th';
+    },
+
+    // ensure all numbers have two digits
+    pad: function ( num ) {
+      return ( num < 10 ? '0' + num : num );
+    },
+
+    // clock face markers - major (every 5 minutes) and minor (every minute)
+    major: new Array( 12 ),
+    minor: new Array( 60 )
+  }
+});
+
+// ...then update it once a second
+setInterval( function () {
+  ractive.set( 'date', new Date() );
+}, 1000 );</script>
+
+	<script>initExample();</script></body></html>
