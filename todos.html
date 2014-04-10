@@ -1,14 +1,13 @@
 <!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-
-	<link rel="icon" type="image/png" href="favicon.png">
-
 	<title>Todos | Examples | Ractive.js</title>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link rel="icon" type="image/png" href="assets/favicon.png">
+	<link rel="stylesheet" href="min.css">
+
 	
-	
-	<link rel="stylesheet" href="examples.css">
 
 	
 
@@ -36,6 +35,16 @@ button {
 	-ms-appearance: none;
 	-o-appearance: none;
 	appearance: none;
+}
+
+button:hover, button:active, button:focus {
+	background: none;
+	border: none;
+}
+
+#header {
+	padding: 0;
+	margin: 0;
 }
 
 #new-todo,
@@ -325,33 +334,51 @@ label[for='toggle-all'] {
 }
 </style></head>
 
-<body class="example"><header><h1>Todos</h1>
-		<a class="more-examples" href="./">more Ractive.js examples &raquo;</a></header>
+<body class="example"><nav><div class="nav-inner"><a href="http://ractivejs.org">Ractive.js</a>
 
-	<div class="example-container"><div id="example"><noscript><p class=message>Please <a href=www.enable-javascript.com>enable JavaScript</a> to view this example.</p></noscript></div></div>
+		<ul><li><a href=http://ractivejs.org/60-second-setup>60 second setup</a></li>
+			<li><a href=http://learn.ractivejs.org>Tutorials</a></li>
+			<li class=selected><a href=http://examples.ractivejs.org>Examples</a></li>
+			<li><a href=http://docs.ractivejs.org>Docs</a></li>
+			<li><a href=http://docs.ractivejs.org/latest/plugins>Plugins</a></li>
+			<li><a href=http://blog.ractivejs.org>Blog</a></li>
+			<li class=github-small><a href=https://github.com/ractivejs/ractive>GitHub</a></li></ul>
 
-	<div id="info"></div>
+		<a class="github-wide" href="https://github.com/ractivejs/ractive">GitHub</a>
+
+		<button id="nav-toggle">&#9776;</button></div></nav>
+
+
+	<header><h1>Todos</h1></header>
+
+	<main><div class="example-container"><div id="example"><noscript><p class=message>Please <a href=www.enable-javascript.com>enable JavaScript</a> to view this example.</p></noscript></div></div>
+
+		<div id="info"></div></main>
+
+	<footer><p>Ractive.js is a free and open source project released under the MIT license.</p></footer>
+
 
 
 	<script id="infoTemplate" type="ractive"><div class='controls'>
-			<span on-tap='select:readme'     class='tab <% selected === "readme"     ? "selected" : "" %>'>readme</span>
-			<span on-tap='select:template'   class='tab <% selected === "template"   ? "selected" : "" %>'>template</span>
-			<span on-tap='select:javascript' class='tab <% selected === "javascript" ? "selected" : "" %>'>javascript</span>
-			<span on-tap='select:css'        class='tab <% selected === "css"        ? "selected" : "" %>'>css</span>
+			<span on-tap='select:readme'     class='tab {{ selected === "readme"     ? "selected" : "" }}'>readme</span>
+			<span on-tap='select:template'   class='tab {{ selected === "template"   ? "selected" : "" }}'>template</span>
+			<span on-tap='select:javascript' class='tab {{ selected === "javascript" ? "selected" : "" }}'>javascript</span>
+			<span on-tap='select:css'        class='tab {{ selected === "css"        ? "selected" : "" }}'>css</span>
 		</div>
 
 		<div class='wrapper'>
-			<div id='readme-tab'     class='<% selected === "readme" ? "visible" : "hidden" %>'>
+			<div id='readme-tab'     class='{{ selected === "readme" ? "visible" : "hidden" }}'>
 				<p>This is an adaptation of the <a href='http://todomvc.com/'>TodoMVC</a> application. <span class='logo'>Ractive.js</span> doesn't take a side in the MVC wars &ndash; it aims to be architecturally agnostic &ndash; so whereas other TodoMVC implementations have a strict separation between models, views and controllers, <span class='logo'>Ractive.js</span> lets you structure your app how you see fit.</p>
 
-<p>Often, your 'model' will be a plain old JavaScript object or array. Array mutator methods (<code>push</code>, <code>pop</code>, <code>shift</code>, <code>unshift</code>, <code>splice</code>, <code>reverse</code> and <code>sort</code>) are wrapped (by default &ndash; this behaviour can be prevented) so that the view gets updated with the least amount of work. See the <a href='https://github.com/RactiveJS/Ractive/wiki/Array-modification'>wiki page on array modification</a> for more info.</p>
+<p>Often, your 'model' will be a plain old JavaScript object or array. Array mutator methods (<code>push</code>, <code>pop</code>, <code>shift</code>, <code>unshift</code>, <code>splice</code>, <code>reverse</code> and <code>sort</code>) are wrapped (by default &ndash; this behaviour can be prevented) so that the view gets updated with the least amount of work. See the <a href='http://docs.ractivejs.org/latest/array-modification'>docs</a> for more info.</p>
 
-<p>This example also demonstrates <a href='https://github.com/RactiveJS/Ractive/wiki/Events#proxy-events'>proxy events</a> &ndash; which translate DOM events (such as mouse and keyboard interactions) into <em>domain events</em> (such as 'add item' or 'mark all as complete') &ndash; and <a href='https://github.com/RactiveJS/Ractive/wiki/Transitions'>transitions</a>, which automate things like the slide down/up animations when you add/remove a todo.</p>
+<p>This example also demonstrates <a href='http://docs.ractivejs.org/latest/events#proxy-events'>proxy events</a> &ndash; which translate DOM events (such as mouse and keyboard interactions) into <em>domain events</em> (such as 'add item' or 'mark all as complete') &ndash; and <a href='http://docs/ractivejs.org/latest/transitions'>transitions</a>, which automate things like the slide down/up animations when you add/remove a todo.</p>
+
 			</div>
 
-			<pre id='template-tab'   class='prettyprint language-html <% selected === "template" ? "visible" : "hidden" %>'></pre>
-			<pre id='javascript-tab' class='prettyprint language-javascript <% selected === "javascript" ? "visible" : "hidden" %>'></pre>
-			<pre id='css-tab'        class='prettyprint language-css <% selected === "css" ? "visible" : "hidden" %>'></pre>
+			<pre id='template-tab'   class='prettyprint language-html {{ selected === "template" ? "visible" : "hidden" }}'></pre>
+			<pre id='javascript-tab' class='prettyprint language-javascript {{ selected === "javascript" ? "visible" : "hidden" }}'></pre>
+			<pre id='css-tab'        class='prettyprint language-css {{ selected === "css" ? "visible" : "hidden" }}'></pre>
 		</div></script>
 
 	<script id="example-template" type="text/ractive"><div class='todo-app'>
@@ -426,12 +453,13 @@ label[for='toggle-all'] {
 <!-- {{/item}} --></script>
 
 	
-	<script src="lib/Ractive-legacy.js"></script>
-	<script src="lib/Ractive-events-tap.min.js"></script>
+	<script src="lib/ractive-legacy.js"></script>
+	<script src="lib/ractive-events-tap.min.js"></script>
 	<script src="lib/highlight.js"></script>
 	<script src="lib/Ractive-events-keys.min.js"></script>
 	<script src="lib/Ractive-transitions-slide.min.js"></script>
 	<script src="js/example.js"></script>
+	<script src="assets/nav.js"></script>
 
 	<script id="example-javascript">var items, sampleItems, todoList, filters;
 
@@ -447,8 +475,10 @@ sampleItems = [
 // to access localStorage with cookies disabled, so we try-catch
 try {
   if ( window.localStorage ) {
-    items = JSON.parse( window.localStorage.getItem( 'ractive-todos' ) ) || sampleItems;
-  } else {
+    items = JSON.parse( window.localStorage.getItem( 'ractive-todos' ) );
+  }
+
+  if ( !items || !items.length ) {
     items = sampleItems;
   }
 } catch ( err ) {
@@ -554,6 +584,7 @@ todoList.observe( 'items', function ( items ) {
   if ( window.localStorage ) {
     localStorage.setItem( 'ractive-todos', JSON.stringify( items ) );
   }
-});</script>
+});
+</script>
 
 	<script>initExample();</script></body></html>

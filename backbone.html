@@ -1,14 +1,13 @@
 <!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-
-	<link rel="icon" type="image/png" href="favicon.png">
-
 	<title>Ractive + Backbone | Examples | Ractive.js</title>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link rel="icon" type="image/png" href="assets/favicon.png">
+	<link rel="stylesheet" href="min.css">
+
 	
-	
-	<link rel="stylesheet" href="examples.css">
 
 	
 
@@ -50,7 +49,7 @@
 }
 
 
-ul {
+.thumbnails {
 	width: 50%;
 	float: left;
 	list-style: none;
@@ -61,7 +60,7 @@ ul {
 	box-sizing: border-box;
 }
 
-li {
+.thumbnail {
 	position: relative;
 	float: left;
 	width: 16.666%;
@@ -162,25 +161,43 @@ li {
 .director .credits-list {
 	line-height: 1.5;
 	right: 0;
-}</style></head>
+}
+</style></head>
 
-<body class="example"><header><h1>Ractive + Backbone</h1>
-		<a class="more-examples" href="./">more Ractive.js examples &raquo;</a></header>
+<body class="example"><nav><div class="nav-inner"><a href="http://ractivejs.org">Ractive.js</a>
 
-	<div class="example-container"><div id="example"><noscript><p class=message>Please <a href=www.enable-javascript.com>enable JavaScript</a> to view this example.</p></noscript></div></div>
+		<ul><li><a href=http://ractivejs.org/60-second-setup>60 second setup</a></li>
+			<li><a href=http://learn.ractivejs.org>Tutorials</a></li>
+			<li class=selected><a href=http://examples.ractivejs.org>Examples</a></li>
+			<li><a href=http://docs.ractivejs.org>Docs</a></li>
+			<li><a href=http://docs.ractivejs.org/latest/plugins>Plugins</a></li>
+			<li><a href=http://blog.ractivejs.org>Blog</a></li>
+			<li class=github-small><a href=https://github.com/ractivejs/ractive>GitHub</a></li></ul>
 
-	<div id="info"></div>
+		<a class="github-wide" href="https://github.com/ractivejs/ractive">GitHub</a>
+
+		<button id="nav-toggle">&#9776;</button></div></nav>
+
+
+	<header><h1>Ractive + Backbone</h1></header>
+
+	<main><div class="example-container"><div id="example"><noscript><p class=message>Please <a href=www.enable-javascript.com>enable JavaScript</a> to view this example.</p></noscript></div></div>
+
+		<div id="info"></div></main>
+
+	<footer><p>Ractive.js is a free and open source project released under the MIT license.</p></footer>
+
 
 
 	<script id="infoTemplate" type="ractive"><div class='controls'>
-			<span on-tap='select:readme'     class='tab <% selected === "readme"     ? "selected" : "" %>'>readme</span>
-			<span on-tap='select:template'   class='tab <% selected === "template"   ? "selected" : "" %>'>template</span>
-			<span on-tap='select:javascript' class='tab <% selected === "javascript" ? "selected" : "" %>'>javascript</span>
-			<span on-tap='select:css'        class='tab <% selected === "css"        ? "selected" : "" %>'>css</span>
+			<span on-tap='select:readme'     class='tab {{ selected === "readme"     ? "selected" : "" }}'>readme</span>
+			<span on-tap='select:template'   class='tab {{ selected === "template"   ? "selected" : "" }}'>template</span>
+			<span on-tap='select:javascript' class='tab {{ selected === "javascript" ? "selected" : "" }}'>javascript</span>
+			<span on-tap='select:css'        class='tab {{ selected === "css"        ? "selected" : "" }}'>css</span>
 		</div>
 
 		<div class='wrapper'>
-			<div id='readme-tab'     class='<% selected === "readme" ? "visible" : "hidden" %>'>
+			<div id='readme-tab'     class='{{ selected === "readme" ? "visible" : "hidden" }}'>
 				<p><span class='logo'>Ractive.js</span> isn't an MVC framework, because MVC isn't the only way to build apps. Rather than dressing up your data with dedicated Model classes, you can use plain old JavaScript objects &ndash; POJOs.</p>
 
 <p>That's handy, but sometimes it's not enough &ndash; maybe you want to use Backbone (for example) Models and Collections in your app, but you still want to use Ractive to render your interface.</p>
@@ -202,9 +219,9 @@ li {
 <p>You'll find more information about adaptors, including how to create your own, on the <a href='https://github.com/RactiveJS/Ractive/wiki/Ractive.adaptors'>wiki</a>.</p>
 			</div>
 
-			<pre id='template-tab'   class='prettyprint language-html <% selected === "template" ? "visible" : "hidden" %>'></pre>
-			<pre id='javascript-tab' class='prettyprint language-javascript <% selected === "javascript" ? "visible" : "hidden" %>'></pre>
-			<pre id='css-tab'        class='prettyprint language-css <% selected === "css" ? "visible" : "hidden" %>'></pre>
+			<pre id='template-tab'   class='prettyprint language-html {{ selected === "template" ? "visible" : "hidden" }}'></pre>
+			<pre id='javascript-tab' class='prettyprint language-javascript {{ selected === "javascript" ? "visible" : "hidden" }}'></pre>
+			<pre id='css-tab'        class='prettyprint language-css {{ selected === "css" ? "visible" : "hidden" }}'></pre>
 		</div></script>
 
 	<script id="example-template" type="text/ractive"><div class='info'>
@@ -245,7 +262,7 @@ li {
   {{/selectedFilm}}
 </div>
 
-<ul>
+<ul class='thumbnails'>
   {{#films}}
     <li
       on-tap='select:{{this}}'
@@ -254,17 +271,19 @@ li {
       <img src='assets/bond/images/{{poster}}'>
     </li>
   {{/films}}
-</ul></script>
+</ul>
+</script>
 
 	
-	<script src="lib/Ractive-legacy.js"></script>
-	<script src="lib/Ractive-events-tap.min.js"></script>
+	<script src="lib/ractive-legacy.js"></script>
+	<script src="lib/ractive-events-tap.min.js"></script>
 	<script src="lib/highlight.js"></script>
 	<script src="lib/underscore-min.js"></script>
 	<script src="lib/backbone-min.js"></script>
 	<script src="lib/Ractive-adaptors-Backbone.js"></script>
 	<script src="lib/Ractive-events-hover.min.js"></script>
 	<script src="js/example.js"></script>
+	<script src="assets/nav.js"></script>
 
 	<script id="example-javascript">var ractive, Film, Actor, Director, Films, getCollectionFromData, xhr;
 
@@ -364,6 +383,7 @@ xhr.onload = function () {
   });
 };
 
-xhr.send();</script>
+xhr.send();
+</script>
 
 	<script>initExample();</script></body></html>

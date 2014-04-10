@@ -17,7 +17,7 @@
 				selected: 'readme'
 			},
 			preserveWhitespace: true,
-			delimiters: [ '<%', '%>' ]
+			delimiters: [ '{{', '}}' ]
 		});
 
 		info.on( 'select', function ( event, tab ) {
