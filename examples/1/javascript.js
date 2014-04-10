@@ -12,8 +12,10 @@ sampleItems = [
 // to access localStorage with cookies disabled, so we try-catch
 try {
 	if ( window.localStorage ) {
-		items = JSON.parse( window.localStorage.getItem( 'ractive-todos' ) ) || sampleItems;
-	} else {
+		items = JSON.parse( window.localStorage.getItem( 'ractive-todos' ) );
+	}
+
+	if ( !items || !items.length ) {
 		items = sampleItems;
 	}
 } catch ( err ) {
