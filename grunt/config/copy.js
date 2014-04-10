@@ -14,5 +14,13 @@ module.exports = {
 			expand: true,
 			dest: 'build'
 		}]
+	},
+	snippets: {
+		files: [{
+			cwd: 'shared/js/snippets',
+			src: '**/*',
+			expand: true,
+			dest: 'build/assets'
+		}]
 	}
 };
