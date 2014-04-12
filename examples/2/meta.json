@@ -3,6 +3,6 @@
 	"slug": "comments",
 	"libs": [
 		"showdown.js",
-		"Ractive-transitions-slide.min.js"
+		"ractive-transitions-slide.min.js"
 	]
 }

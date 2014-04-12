@@ -4,7 +4,7 @@
 	"libs": [
 		"underscore-min.js",
 		"backbone-min.js",
-		"Ractive-adaptors-Backbone.js",
-		"Ractive-events-hover.min.js"
+		"ractive-adaptors-backbone.js",
+		"ractive-events-hover.min.js"
 	]
 }

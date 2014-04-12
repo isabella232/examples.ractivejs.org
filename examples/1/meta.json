@@ -2,7 +2,7 @@
 	"name": "Todos",
 	"slug": "todos",
 	"libs": [
-		"Ractive-events-keys.min.js",
-		"Ractive-transitions-slide.min.js"
+		"ractive-events-keys.min.js",
+		"ractive-transitions-slide.min.js"
 	]
 }
