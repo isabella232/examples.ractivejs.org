@@ -6,7 +6,7 @@ ractive = new Ractive({
 	template: template,
 
 	// This is how we tell Ractive to keep an eye out for Backbone objects
-	adaptors: [ 'Backbone' ]
+	adapt: [ 'Backbone' ]
 });
 
 ractive.on({
